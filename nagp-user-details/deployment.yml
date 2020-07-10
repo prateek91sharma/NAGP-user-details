@@ -21,6 +21,22 @@ spec:
           env:
           - name: spring.datasource.url
             value: jdbc:mysql://mysql:3306/test
+          - name: spring.datasource.username
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: username
+          - name: spring.datasource.password
+            valueFrom:
+              secretKeyRef:
+                name: db-credentials
+                key: password   
+          - name: JAEGER_SERVICE_NAME
+            value: nagp-user-details
+          - name: JAEGER_AGENT_HOST
+            value: jaeger-agent
+          - name: JAEGER_AGENT_PORT
+            value: "6831"  
           ports:
             - containerPort: 80
 ---
@@ -96,7 +112,10 @@ spec:
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: root
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass-new
+              key: password 
         ports:
         - containerPort: 3306
           name: mysql
@@ -107,4 +126,12 @@ spec:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pv-claim
+---
 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+data:
+  username: cm9vdA==
+  password: cm9vdA==
