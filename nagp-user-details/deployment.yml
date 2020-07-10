@@ -37,6 +37,10 @@ spec:
             value: jaeger-agent
           - name: JAEGER_AGENT_PORT
             value: "6831"  
+          - name: opentracing.jaeger.udp-sender.host
+            value: jaeger-agent 
+          - name: opentracing.jaeger.udp-sender.port
+            value: "6831"    
           ports:
             - containerPort: 80
 ---
